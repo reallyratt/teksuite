@@ -29,7 +29,7 @@ const navItems: NavMenuItem[] = [
   { id: 'home', label: 'Home', icon: Home },
   { id: 'templates', label: 'Templates', icon: LayoutTemplate },
   { id: 'users', label: 'Users', icon: Users },
-  { id: 'developer', label: 'Developer Page', icon: Code2 },
+  { id: 'developer', label: 'Developer', icon: Code2 },
   { id: 'settings', label: 'Settings', icon: Settings },
 ];
 

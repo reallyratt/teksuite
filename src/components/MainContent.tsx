@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { TabId } from '../types';
 import { HomeContent } from './HomeContent';
 import { TemplatesContent } from './TemplatesContent';
 import { UsersContent } from './UsersContent';
+import { SettingsContent } from './SettingsContent';
 import {
   Home,
   LayoutTemplate,
@@ -14,13 +15,18 @@ import {
   Terminal,
   User,
   Lock,
-  Key,
   ShieldAlert,
   CheckCircle2,
 } from 'lucide-react';
 
 interface MainContentProps {
   activeTab: TabId;
+  theme: 'dark' | 'light';
+  setTheme: (theme: 'dark' | 'light') => void;
+  scrollVisual: boolean;
+  setScrollVisual: (val: boolean) => void;
+  enableCopy: boolean;
+  setEnableCopy: (val: boolean) => void;
 }
 
 const tabInfo: Record<
@@ -55,8 +61,8 @@ const tabInfo: Record<
     badgeText: 'Access Control',
   },
   developer: {
-    title: 'Developer Page',
-    tabText: 'This is the Developer Page Tab',
+    title: 'Developer',
+    tabText: 'This is the Developer Tab',
     description: 'Access API keys, integration endpoints, system logs, webhooks, and developer tools.',
     icon: Code2,
     badgeText: 'Developer Hub',
@@ -70,7 +76,15 @@ const tabInfo: Record<
   },
 };
 
-export const MainContent: React.FC<MainContentProps> = ({ activeTab }) => {
+export const MainContent: React.FC<MainContentProps> = ({
+  activeTab,
+  theme,
+  setTheme,
+  scrollVisual,
+  setScrollVisual,
+  enableCopy,
+  setEnableCopy,
+}) => {
   const current = tabInfo[activeTab];
   const IconComponent = current.icon;
 
@@ -79,19 +93,6 @@ export const MainContent: React.FC<MainContentProps> = ({ activeTab }) => {
   const [devPassword, setDevPassword] = useState('');
   const [devUnlocked, setDevUnlocked] = useState(false);
   const [authError, setAuthError] = useState('');
-
-  // Toast for Settings page coming soon
-  const [settingsToast, setSettingsToast] = useState(false);
-
-  useEffect(() => {
-    if (activeTab === 'settings') {
-      setSettingsToast(true);
-      const timer = setTimeout(() => {
-        setSettingsToast(false);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [activeTab]);
 
   const handleDevLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -110,31 +111,10 @@ export const MainContent: React.FC<MainContentProps> = ({ activeTab }) => {
   return (
     <main
       id="main-content-view"
-      className="flex-1 p-6 md:p-10 bg-[#0a0a0a] text-slate-200 overflow-y-auto min-h-0 relative"
+      className={`flex-1 p-6 md:p-10 overflow-y-auto min-h-0 relative transition-colors duration-300 ${
+        theme === 'light' ? 'bg-slate-100 text-slate-800' : 'bg-[#0a0a0a] text-slate-200'
+      } ${!scrollVisual ? '[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden' : ''}`}
     >
-      {/* 3-Second Toast Popup for Settings */}
-      <AnimatePresence>
-        {settingsToast && (
-          <motion.div
-            initial={{ opacity: 0, y: -20, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.9 }}
-            transition={{ duration: 0.2 }}
-            className="fixed top-20 right-6 z-50 flex items-center space-x-3 rounded-xl border border-indigo-500/30 bg-[#1e1e1e] px-5 py-3.5 shadow-2xl text-white ring-1 ring-indigo-500/50"
-          >
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600/20 text-indigo-400">
-              <Sparkles className="h-4 w-4" />
-            </div>
-            <div>
-              <p className="text-sm font-bold text-white uppercase">SETTINGS</p>
-              <p className="text-xs text-indigo-300 font-medium">
-                Coming Soon! Feature under development.
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* Top Ambient Glow */}
       <div className="absolute top-0 left-0 w-full h-[280px] bg-gradient-to-b from-indigo-500/10 via-indigo-500/5 to-transparent pointer-events-none z-0" />
 
@@ -151,24 +131,18 @@ export const MainContent: React.FC<MainContentProps> = ({ activeTab }) => {
             {activeTab === 'home' ? (
               <HomeContent />
             ) : activeTab === 'templates' ? (
-              <TemplatesContent />
+              <TemplatesContent enableCopy={enableCopy} />
             ) : activeTab === 'users' ? (
               <UsersContent />
             ) : activeTab === 'settings' ? (
-              <div className="mx-auto max-w-md my-12 text-center">
-                <div className="rounded-2xl border border-white/10 bg-[#161616] p-8 md:p-10 shadow-2xl space-y-4 relative overflow-hidden">
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-indigo-500 to-purple-500" />
-                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-600/15 border border-indigo-500/30 text-indigo-400 shadow-lg">
-                    <Settings className="h-8 w-8" />
-                  </div>
-                  <h3 className="text-xl font-extrabold text-white uppercase tracking-wider">
-                    SETTINGS
-                  </h3>
-                  <p className="text-sm text-indigo-300 font-medium">
-                    Coming Soon! Feature under development.
-                  </p>
-                </div>
-              </div>
+              <SettingsContent
+                theme={theme}
+                setTheme={setTheme}
+                scrollVisual={scrollVisual}
+                setScrollVisual={setScrollVisual}
+                enableCopy={enableCopy}
+                setEnableCopy={setEnableCopy}
+              />
             ) : activeTab === 'developer' && !devUnlocked ? (
               <div className="mx-auto max-w-md my-8">
                 <div className="rounded-2xl border border-white/10 bg-[#161616] p-6 md:p-8 shadow-2xl relative overflow-hidden">
@@ -193,8 +167,9 @@ export const MainContent: React.FC<MainContentProps> = ({ activeTab }) => {
                         id="dev-username-input"
                         value={devUsername}
                         onChange={(e) => setDevUsername(e.target.value)}
+                        placeholder="Username"
                         required
-                        className="w-full rounded-xl border border-white/10 bg-[#121212] py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-600 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all font-mono"
+                        className="w-full rounded-xl border border-white/10 bg-[#121212] py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all font-mono"
                       />
                     </div>
 
@@ -208,8 +183,9 @@ export const MainContent: React.FC<MainContentProps> = ({ activeTab }) => {
                         id="dev-password-input"
                         value={devPassword}
                         onChange={(e) => setDevPassword(e.target.value)}
+                        placeholder="Password"
                         required
-                        className="w-full rounded-xl border border-white/10 bg-[#121212] py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-600 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all font-mono"
+                        className="w-full rounded-xl border border-white/10 bg-[#121212] py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all font-mono"
                       />
                     </div>
 
@@ -322,6 +298,16 @@ export const MainContent: React.FC<MainContentProps> = ({ activeTab }) => {
             )}
           </motion.div>
         </AnimatePresence>
+
+        {/* Bottom Middle Footer */}
+        <footer className="pt-10 pb-6 text-center space-y-1">
+          <p className="text-xs md:text-sm font-semibold text-slate-400">
+            Authored by Cay
+          </p>
+          <p className="text-[11px] font-extrabold text-indigo-400 tracking-widest uppercase">
+            v1.0 stable
+          </p>
+        </footer>
       </div>
     </main>
   );

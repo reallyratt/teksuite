@@ -9,6 +9,11 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
+  // Settings State
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [scrollVisual, setScrollVisual] = useState<boolean>(true);
+  const [enableCopy, setEnableCopy] = useState<boolean>(true);
+
   // Screen size listener to handle mobile responsive behavior
   useEffect(() => {
     const handleResize = () => {
@@ -37,7 +42,13 @@ export default function App() {
   };
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-[#0a0a0a] text-slate-200 font-sans antialiased overflow-hidden selection:bg-indigo-500 selection:text-white">
+    <div
+      className={`h-screen w-screen flex flex-col font-sans antialiased overflow-hidden transition-colors duration-300 ${
+        theme === 'light'
+          ? 'bg-slate-100 text-slate-800 selection:bg-indigo-600 selection:text-white'
+          : 'bg-[#0a0a0a] text-slate-200 selection:bg-indigo-500 selection:text-white'
+      } ${!enableCopy ? 'select-none' : ''}`}
+    >
       {/* Top Bar Navigation */}
       <TopBar
         sidebarOpen={sidebarOpen}
@@ -57,7 +68,15 @@ export default function App() {
         />
 
         {/* Main Content Workspace */}
-        <MainContent activeTab={activeTab} />
+        <MainContent
+          activeTab={activeTab}
+          theme={theme}
+          setTheme={setTheme}
+          scrollVisual={scrollVisual}
+          setScrollVisual={setScrollVisual}
+          enableCopy={enableCopy}
+          setEnableCopy={setEnableCopy}
+        />
       </div>
     </div>
   );

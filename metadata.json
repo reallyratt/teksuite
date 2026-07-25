@@ -1,5 +1,5 @@
 {
-  "name": "TEKSUITE Workspace",
+  "name": "TekSuite",
   "description": "Cross-platform workspace dashboard with animated sidebar navigation and milestone tracking.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]

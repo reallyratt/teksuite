@@ -8,9 +8,62 @@ import {
   Sparkles,
 } from 'lucide-react';
 
+const extractTagContent = (rawText: string, startTag: string, endTag: string): string => {
+  const startIndex = rawText.indexOf(startTag);
+  if (startIndex === -1) return '';
+  const contentStart = startIndex + startTag.length;
+  const endIndex = rawText.indexOf(endTag, contentStart);
+  if (endIndex === -1) return rawText.substring(contentStart).trim();
+  return rawText.substring(contentStart, endIndex).trim();
+};
+
 export const HomeContent: React.FC = () => {
   const [time, setTime] = useState(new Date());
   const [comingSoonToast, setComingSoonToast] = useState(false);
+  const [namaMinggu, setNamaMinggu] = useState<string>('MINGGU BIASA XVII');
+  const [nyaosiText, setNyaosiText] = useState<string>('');
+
+  // Fetch Google Doc content
+  useEffect(() => {
+    const fetchDoc = async () => {
+      try {
+        let text = '';
+        try {
+          const res = await fetch('/api/gdoc');
+          if (res.ok) {
+            text = await res.text();
+          }
+        } catch {
+          // ignore error and try direct fetch
+        }
+
+        if (!text) {
+          const directRes = await fetch(
+            'https://docs.google.com/document/d/1jJst-YDMbhZVFSPCWrEC1d0PVZl6urMaZ3xGTo7t0MA/export?format=txt'
+          );
+          if (directRes.ok) {
+            text = await directRes.text();
+          }
+        }
+
+        if (text) {
+          const parsedNama = extractTagContent(text, 'in>>nmmgg>>', '<<out<<nmmgg');
+          if (parsedNama) {
+            setNamaMinggu(parsedNama);
+          }
+
+          const parsedNyaosi = extractTagContent(text, 'in>>nyosprs>>', '<<out<<nyosprs');
+          if (parsedNyaosi) {
+            setNyaosiText(parsedNyaosi);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch doc content:', err);
+      }
+    };
+
+    fetchDoc();
+  }, []);
 
   // Live updating clock
   useEffect(() => {
@@ -47,6 +100,88 @@ export const HomeContent: React.FC = () => {
   const minutes = String(time.getMinutes()).padStart(2, '0');
   const seconds = String(time.getSeconds()).padStart(2, '0');
   const formattedClock = `${hours}:${minutes}:${seconds}`;
+
+  const renderNyaosiContent = () => {
+    if (!nyaosiText) {
+      return (
+        <>
+          <div className="font-semibold text-indigo-300 text-base flex items-center space-x-2">
+            <span>🐇 NYAOSI PIRSA 🐇</span>
+          </div>
+
+          <p className="text-slate-300 font-medium">
+            Mohon perhatian bagi petugas minggu ini tanggal 25 - 26 Juli 2026
+          </p>
+
+          <div className="space-y-1.5 pl-2 text-slate-200 font-medium border-l-2 border-indigo-500/40">
+            <p>🐰 Minggu Biasa XVII</p>
+            <p>🐰 Doa Sebelum Misa: MOHON PANGGILAN</p>
+            <p>🐰 Anamnese: 2B</p>
+            <p>🐰 Bapa Kami: Pater Noster 2</p>
+          </div>
+
+          <div className="pt-3 border-t border-white/10 text-xs text-slate-400 space-y-1">
+            <p className="font-semibold text-slate-300 uppercase tracking-wider">
+              Catatan Kaki
+            </p>
+            <p>- Terdapat 2 versi bacaan injil. Petugas menyesuaikan.</p>
+          </div>
+        </>
+      );
+    }
+
+    const lines = nyaosiText
+      .split('\n')
+      .map((l) => l.trim())
+      .filter((l) => l.length > 0);
+
+    const headerLine = lines.find((l) => l.includes('NYAOSI PIRSA') || l.startsWith('🐇'));
+    const bodyNotice = lines.find((l) => l.toLowerCase().includes('mohon perhatian'));
+    const rabbitLines = lines.filter((l) => l.startsWith('🐰'));
+    const catatanIndex = lines.findIndex((l) => l.toLowerCase().includes('catatan kaki'));
+    const footnoteLines = catatanIndex !== -1 ? lines.slice(catatanIndex + 1) : [];
+
+    if (rabbitLines.length === 0 && !headerLine) {
+      return (
+        <div className="whitespace-pre-wrap font-medium text-slate-200 leading-relaxed">
+          {nyaosiText}
+        </div>
+      );
+    }
+
+    return (
+      <>
+        {headerLine && (
+          <div className="font-semibold text-indigo-300 text-base flex items-center space-x-2">
+            <span>{headerLine}</span>
+          </div>
+        )}
+
+        {bodyNotice && (
+          <p className="text-slate-300 font-medium">{bodyNotice}</p>
+        )}
+
+        {rabbitLines.length > 0 && (
+          <div className="space-y-1.5 pl-2 text-slate-200 font-medium border-l-2 border-indigo-500/40">
+            {rabbitLines.map((line, idx) => (
+              <p key={idx}>{line}</p>
+            ))}
+          </div>
+        )}
+
+        {catatanIndex !== -1 && (
+          <div className="pt-3 border-t border-white/10 text-xs text-slate-400 space-y-1">
+            <p className="font-semibold text-slate-300 uppercase tracking-wider">
+              {lines[catatanIndex]}
+            </p>
+            {footnoteLines.map((line, idx) => (
+              <p key={idx}>{line}</p>
+            ))}
+          </div>
+        )}
+      </>
+    );
+  };
 
   return (
     <div className="space-y-8 relative">
@@ -87,9 +222,9 @@ export const HomeContent: React.FC = () => {
             {formattedClock}
           </div>
 
-          {/* MINGGU ALPHA 67 replacing REAL-TIME text */}
+          {/* Dynamic Nama Minggu from Google Doc */}
           <p className="text-sm md:text-base uppercase tracking-widest text-indigo-400 font-extrabold">
-            MINGGU ALPHA 67
+            {namaMinggu}
           </p>
         </div>
       </div>
@@ -105,27 +240,7 @@ export const HomeContent: React.FC = () => {
 
         {/* Content Body */}
         <div className="rounded-xl bg-[#121212] border border-white/5 p-5 md:p-6 text-slate-200 text-sm md:text-base leading-relaxed space-y-4 font-sans">
-          <div className="font-semibold text-indigo-300 text-base flex items-center space-x-2">
-            <span>🐇 NYAOSI PIRSA 🐇</span>
-          </div>
-
-          <p className="text-slate-300 font-medium">
-            Mohon perhatian bagi petugas minggu ini tanggal 25 - 26 Juli 2026
-          </p>
-
-          <div className="space-y-1.5 pl-2 text-slate-200 font-medium border-l-2 border-indigo-500/40">
-            <p>🐰 Minggu Biasa XVII</p>
-            <p>🐰 Doa Sebelum Misa: MOHON PANGGILAN</p>
-            <p>🐰 Anamnese: 2B</p>
-            <p>🐰 Bapa Kami: Pater Noster 2</p>
-          </div>
-
-          <div className="pt-3 border-t border-white/10 text-xs text-slate-400 space-y-1">
-            <p className="font-semibold text-slate-300 uppercase tracking-wider">
-              Catatan Kaki
-            </p>
-            <p>- Terdapat 2 versi bacaan injil. Petugas menyesuaikan.</p>
-          </div>
+          {renderNyaosiContent()}
         </div>
       </div>
 

@@ -11,13 +11,23 @@ import {
   Sparkles,
 } from 'lucide-react';
 
-export const TemplatesContent: React.FC = () => {
+interface TemplatesContentProps {
+  enableCopy?: boolean;
+}
+
+export const TemplatesContent: React.FC<TemplatesContentProps> = ({ enableCopy = true }) => {
   const [copied, setCopied] = useState(false);
+  const [copyDisabledNotice, setCopyDisabledNotice] = useState(false);
   const [comingSoonToast, setComingSoonToast] = useState(false);
 
   const templateText = '[Tahun X] Type - Language - Week Title (dd/mm/yyyy)';
 
   const handleCopy = () => {
+    if (!enableCopy) {
+      setCopyDisabledNotice(true);
+      setTimeout(() => setCopyDisabledNotice(false), 2500);
+      return;
+    }
     navigator.clipboard.writeText(templateText);
     setCopied(true);
     setTimeout(() => {
@@ -36,6 +46,25 @@ export const TemplatesContent: React.FC = () => {
     <div className="space-y-8 relative">
       {/* 3-Second Toast Popup for Playbook User Manual */}
       <AnimatePresence>
+        {copyDisabledNotice && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.9 }}
+            transition={{ duration: 0.2 }}
+            className="fixed top-20 right-6 z-50 flex items-center space-x-3 rounded-xl border border-rose-500/30 bg-[#1e1e1e] px-5 py-3.5 shadow-2xl text-white ring-1 ring-rose-500/50"
+          >
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-rose-600/20 text-rose-400">
+              <Copy className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="text-sm font-bold text-white">COPY DISABLED</p>
+              <p className="text-xs text-rose-300 font-medium">
+                Copy feature is disabled in Settings.
+              </p>
+            </div>
+          </motion.div>
+        )}
         {comingSoonToast && (
           <motion.div
             initial={{ opacity: 0, y: -20, scale: 0.9 }}

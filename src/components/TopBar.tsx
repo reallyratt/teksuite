@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, BellRing, Sparkles, CheckCircle, Keyboard, FilePenLine, Megaphone } from 'lucide-react';
+import { Menu, BellRing, Cloud, CheckCircle, Keyboard, FilePenLine, Megaphone } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { TabId } from '../types';
 import { getActiveMilestones, MilestoneTask } from '../utils/milestones';
@@ -79,7 +79,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           title="Go to Home Tab"
         >
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-tr from-indigo-600 to-indigo-400 text-white shadow-md shadow-indigo-500/20">
-            <Sparkles className="h-4 w-4" />
+            <Cloud className="h-4 w-4" />
           </div>
           <span className="text-xl font-black tracking-tighter text-white select-none">
             TEK<span className="text-indigo-400">SUITE</span>
