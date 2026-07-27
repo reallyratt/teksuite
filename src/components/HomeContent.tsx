@@ -4,9 +4,10 @@ import {
   Calendar,
   ExternalLink,
   FilePenLine,
-  Keyboard,
   Sparkles,
+  FolderOpen,
 } from 'lucide-react';
+import { TypewriterIcon } from './TypewriterIcon';
 
 const extractTagContent = (rawText: string, startTag: string, endTag: string): string => {
   const startIndex = rawText.indexOf(startTag);
@@ -244,6 +245,48 @@ export const HomeContent: React.FC = () => {
         </div>
       </div>
 
+      {/* SOURCE FILE Square */}
+      <div className="rounded-2xl border border-white/10 bg-[#161616] p-6 md:p-8 shadow-2xl space-y-4 relative overflow-hidden">
+        <div className="border-b border-white/10 pb-3 text-left flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <FolderOpen className="h-5 w-5 text-indigo-400" />
+            <h3 className="text-lg md:text-xl font-bold text-white tracking-wide uppercase">
+              SOURCE FILE
+            </h3>
+          </div>
+        </div>
+
+        {/* Clickable Field 1: Source File */}
+        <a
+          href="https://drive.google.com/drive/folders/1A2ggUvUuC9Dcm-MLhrI_NGsHDdJn1awu?usp=drive_link"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group block text-left w-full rounded-xl bg-[#121212] border border-white/5 p-5 transition-all hover:border-indigo-500/40 hover:bg-[#181818] active:scale-[0.99] space-y-2"
+        >
+          <p className="text-sm md:text-base text-slate-200 leading-relaxed font-medium">
+            Click here for this month&apos;s active Source File to begin generating Panduan Misa.
+          </p>
+          <p className="text-xs font-semibold text-indigo-400 group-hover:text-indigo-300">
+            Source File &gt;
+          </p>
+        </a>
+
+        {/* Clickable Field 2: Panduan Misa */}
+        <a
+          href="https://drive.google.com/drive/folders/1H69RDtzg4HNQe7YV5gK8jJUPFDt8nekv?usp=drive_link"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group block text-left w-full rounded-xl bg-[#121212] border border-white/5 p-5 transition-all hover:border-indigo-500/40 hover:bg-[#181818] active:scale-[0.99] space-y-2"
+        >
+          <p className="text-sm md:text-base text-slate-200 leading-relaxed font-medium">
+            Click here for this month&apos;s active Panduan Misa to begin generating Teks Misa.
+          </p>
+          <p className="text-xs font-semibold text-indigo-400 group-hover:text-indigo-300">
+            Panduan Misa &gt;
+          </p>
+        </a>
+      </div>
+
       {/* Middle Squared Text Section Divider: TOOLS */}
       <div className="flex justify-center pt-2 pb-2">
         <div className="px-8 py-2.5 rounded-xl bg-[#161616] border border-white/15 text-sm font-extrabold tracking-widest text-indigo-400 uppercase shadow-lg shadow-black/40 ring-1 ring-white/5">
@@ -263,7 +306,7 @@ export const HomeContent: React.FC = () => {
           <div className="flex items-start justify-between">
             {/* Typewriter Icon */}
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600/15 border border-indigo-500/30 text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-all">
-              <Keyboard className="h-6 w-6" />
+              <TypewriterIcon className="h-6 w-6" />
             </div>
             <ExternalLink className="h-4 w-4 text-slate-500 group-hover:text-indigo-400 transition-colors" />
           </div>

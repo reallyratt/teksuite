@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+html, body, #root {
+  background-color: #0a0a0a;
+  overscroll-behavior-y: none;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 @layer base {
   * {
     user-select: none;
@@ -18,3 +26,4 @@
 *::-webkit-scrollbar {
   display: none; /* Chrome, Safari and Opera */
 }
+

@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, BellRing, Cloud, CheckCircle, Keyboard, FilePenLine, Megaphone } from 'lucide-react';
+import { Menu, BellRing, Cloud, CheckCircle, FilePenLine, Megaphone } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { TabId } from '../types';
 import { getActiveMilestones, MilestoneTask } from '../utils/milestones';
+import { TypewriterIcon } from './TypewriterIcon';
 
 interface TopBarProps {
   sidebarOpen: boolean;
@@ -41,8 +42,8 @@ export const TopBar: React.FC<TopBarProps> = ({
   const getTaskIcon = (category: string) => {
     switch (category) {
       case 'Teks Misa':
-        // OTOMATEKS icon (typewriter / keyboard)
-        return <Keyboard className="h-4 w-4 text-indigo-400 shrink-0 mt-0.5" />;
+        // OTOMATEKS icon (typewriter)
+        return <TypewriterIcon className="h-4 w-4 text-indigo-400 shrink-0 mt-0.5" />;
       case 'Panduan Misa':
         // ARTEKSFAK icon (paper with pen)
         return <FilePenLine className="h-4 w-4 text-purple-400 shrink-0 mt-0.5" />;
@@ -82,7 +83,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             <Cloud className="h-4 w-4" />
           </div>
           <span className="text-xl font-black tracking-tighter text-white select-none">
-            TEK<span className="text-indigo-400">SUITE</span>
+            TEKS<span className="text-indigo-400">UITE</span>
           </span>
         </button>
       </div>

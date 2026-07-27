@@ -4,12 +4,13 @@ import {
   Copy,
   Check,
   ExternalLink,
-  Keyboard,
   FilePenLine,
   Megaphone,
   BookOpen,
   Sparkles,
+  FolderOpen,
 } from 'lucide-react';
+import { TypewriterIcon } from './TypewriterIcon';
 
 interface TemplatesContentProps {
   enableCopy?: boolean;
@@ -104,7 +105,7 @@ export const TemplatesContent: React.FC<TemplatesContentProps> = ({ enableCopy =
         >
           <div className="flex items-start justify-between">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600/15 border border-indigo-500/30 text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-all">
-              <Keyboard className="h-6 w-6" />
+              <TypewriterIcon className="h-6 w-6" />
             </div>
             <ExternalLink className="h-4 w-4 text-slate-500 group-hover:text-indigo-400 transition-colors" />
           </div>

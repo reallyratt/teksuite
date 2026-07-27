@@ -5,6 +5,7 @@ import { HomeContent } from './HomeContent';
 import { TemplatesContent } from './TemplatesContent';
 import { UsersContent } from './UsersContent';
 import { SettingsContent } from './SettingsContent';
+import { DevContent } from './DevContent';
 import {
   Home,
   LayoutTemplate,
@@ -111,12 +112,12 @@ export const MainContent: React.FC<MainContentProps> = ({
   return (
     <main
       id="main-content-view"
-      className={`flex-1 p-6 md:p-10 overflow-y-auto min-h-0 relative transition-colors duration-300 ${
+      className={`flex-1 p-6 md:p-10 overflow-y-auto min-h-0 relative transition-colors duration-300 overscroll-y-none ${
         theme === 'light' ? 'bg-slate-100 text-slate-800' : 'bg-[#0a0a0a] text-slate-200'
       } ${!scrollVisual ? '[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden' : ''}`}
     >
-      {/* Top Ambient Glow */}
-      <div className="absolute top-0 left-0 w-full h-[280px] bg-gradient-to-b from-indigo-500/10 via-indigo-500/5 to-transparent pointer-events-none z-0" />
+      {/* Top Ambient Glow - Extended upwards to prevent gradient cutoff on elastic overscroll */}
+      <div className="absolute -top-48 left-0 right-0 h-[520px] bg-gradient-to-b from-indigo-500/20 via-indigo-500/8 to-transparent pointer-events-none z-0" />
 
       <div className="mx-auto max-w-4xl relative z-10 space-y-8">
         <AnimatePresence mode="wait">
@@ -211,8 +212,10 @@ export const MainContent: React.FC<MainContentProps> = ({
                   </form>
                 </div>
               </div>
+            ) : activeTab === 'developer' && devUnlocked ? (
+              <DevContent onLock={handleLockDeveloper} />
             ) : (
-              /* Unlocked Developer Content or Default Page Content */
+              /* Default Page Content */
               <>
                 {/* Active Environment Header Badge */}
                 <div className="flex items-center justify-between">
@@ -305,7 +308,7 @@ export const MainContent: React.FC<MainContentProps> = ({
             Authored by Cay
           </p>
           <p className="text-[11px] font-extrabold text-indigo-400 tracking-widest uppercase">
-            v1.0 stable
+            v1.6 stable
           </p>
         </footer>
       </div>
