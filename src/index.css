@@ -15,9 +15,17 @@ html, body, #root {
     -moz-user-select: none;
     -ms-user-select: none;
   }
+
+  .copy-enabled,
+  .copy-enabled * {
+    user-select: text !important;
+    -webkit-user-select: text !important;
+    -moz-user-select: text !important;
+    -ms-user-select: text !important;
+  }
 }
 
-/* Hide scrollbars globally across all browsers while allowing scroll functionality */
+/* Default state: Hide scrollbars globally across all browsers while allowing scroll functionality */
 * {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
@@ -26,4 +34,38 @@ html, body, #root {
 *::-webkit-scrollbar {
   display: none; /* Chrome, Safari and Opera */
 }
+
+/* Custom Themed Scrollbar when scrollVisual is enabled */
+.scroll-visual-enabled,
+.scroll-visual-enabled * {
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(99, 102, 241, 0.5) transparent !important;
+}
+
+.scroll-visual-enabled::-webkit-scrollbar,
+.scroll-visual-enabled *::-webkit-scrollbar {
+  display: block !important;
+  width: 8px !important;
+  height: 8px !important;
+}
+
+.scroll-visual-enabled::-webkit-scrollbar-track,
+.scroll-visual-enabled *::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.scroll-visual-enabled::-webkit-scrollbar-thumb,
+.scroll-visual-enabled *::-webkit-scrollbar-thumb {
+  background-color: rgba(99, 102, 241, 0.45) !important;
+  border-radius: 9999px !important;
+  border: 2px solid transparent !important;
+  background-clip: padding-box !important;
+  transition: background-color 0.2s !important;
+}
+
+.scroll-visual-enabled::-webkit-scrollbar-thumb:hover,
+.scroll-visual-enabled *::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(99, 102, 241, 0.85) !important;
+}
+
 

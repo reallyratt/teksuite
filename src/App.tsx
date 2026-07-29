@@ -11,8 +11,8 @@ export default function App() {
 
   // Settings State
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
-  const [scrollVisual, setScrollVisual] = useState<boolean>(true);
-  const [enableCopy, setEnableCopy] = useState<boolean>(true);
+  const [scrollVisual, setScrollVisual] = useState<boolean>(false);
+  const [enableCopy, setEnableCopy] = useState<boolean>(false);
 
   // Screen size listener to handle mobile responsive behavior
   useEffect(() => {
@@ -47,13 +47,16 @@ export default function App() {
         theme === 'light'
           ? 'bg-slate-100 text-slate-800 selection:bg-indigo-600 selection:text-white'
           : 'bg-[#0a0a0a] text-slate-200 selection:bg-indigo-500 selection:text-white'
-      } ${!enableCopy ? 'select-none' : ''}`}
+      } ${enableCopy ? 'copy-enabled select-text' : 'select-none'} ${
+        scrollVisual ? 'scroll-visual-enabled' : ''
+      }`}
     >
       {/* Top Bar Navigation */}
       <TopBar
         sidebarOpen={sidebarOpen}
         onToggleSidebar={handleToggleSidebar}
         onSelectTab={handleSelectTab}
+        theme={theme}
       />
 
       {/* Main Layout Container */}
@@ -65,6 +68,7 @@ export default function App() {
           isOpen={sidebarOpen}
           isMobile={isMobile}
           onCloseMobile={() => setSidebarOpen(false)}
+          theme={theme}
         />
 
         {/* Main Content Workspace */}

@@ -37,12 +37,20 @@ const DEPARTMENTS: Department[] = [
   },
 ];
 
-export const UsersContent: React.FC = () => {
+interface UsersContentProps {
+  theme?: 'dark' | 'light';
+}
+
+export const UsersContent: React.FC<UsersContentProps> = ({ theme = 'dark' }) => {
+  const isLight = theme === 'light';
+
   return (
     <div className="space-y-10 relative max-w-5xl mx-auto flex flex-col items-center">
       {/* Top Title: TEXT DIVISION */}
       <div className="py-2 text-center space-y-2">
-        <h2 className="text-3xl md:text-4xl font-black tracking-wider text-white uppercase drop-shadow-md">
+        <h2 className={`text-3xl md:text-4xl font-black tracking-wider uppercase drop-shadow-xs ${
+          isLight ? 'text-slate-900' : 'text-white'
+        }`}>
           TEXT DIVISION
         </h2>
         <div className="h-1 w-24 bg-indigo-500 mx-auto rounded-full" />
@@ -54,7 +62,11 @@ export const UsersContent: React.FC = () => {
           <div key={dept.title} className="space-y-6 flex flex-col items-center">
             {/* Badge Divider Header */}
             <div className="flex justify-center">
-              <div className="px-6 md:px-8 py-2.5 rounded-xl bg-[#161616] border border-white/15 text-xs md:text-sm font-extrabold tracking-widest text-indigo-400 uppercase shadow-lg shadow-black/40 ring-1 ring-white/5 text-center">
+              <div className={`px-6 md:px-8 py-2.5 rounded-xl border text-xs md:text-sm font-extrabold tracking-widest uppercase shadow-lg ring-1 text-center ${
+                isLight
+                  ? 'bg-white border-slate-200 text-indigo-600 ring-black/5 shadow-slate-200'
+                  : 'bg-[#161616] border-white/15 text-indigo-400 ring-white/5 shadow-black/40'
+              }`}>
                 {dept.title}
               </div>
             </div>
@@ -66,13 +78,21 @@ export const UsersContent: React.FC = () => {
                 return (
                   <div
                     key={member.name}
-                    className="group flex flex-col items-center justify-center w-36 sm:w-48 rounded-2xl border border-white/10 bg-[#161616] p-5 sm:p-6 shadow-xl transition-all hover:border-white/20 hover:bg-[#1a1a1a] text-center space-y-4 relative overflow-hidden shrink-0"
+                    className={`group flex flex-col items-center justify-center w-36 sm:w-48 rounded-2xl border p-5 sm:p-6 shadow-xl transition-all text-center space-y-4 relative overflow-hidden shrink-0 ${
+                      isLight
+                        ? 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50 shadow-slate-200/50'
+                        : 'bg-[#161616] border-white/10 hover:border-white/20 hover:bg-[#1a1a1a]'
+                    }`}
                   >
                     {/* Circle with User Icon */}
                     <div
                       className={`flex h-16 w-16 items-center justify-center rounded-full border-2 transition-transform group-hover:scale-105 ${
                         isFemale
-                          ? 'border-pink-500 bg-pink-500/10 text-pink-400 shadow-md shadow-pink-500/20'
+                          ? isLight
+                            ? 'border-pink-500 bg-pink-50 text-pink-600 shadow-md shadow-pink-500/10'
+                            : 'border-pink-500 bg-pink-500/10 text-pink-400 shadow-md shadow-pink-500/20'
+                          : isLight
+                          ? 'border-blue-500 bg-blue-50 text-blue-600 shadow-md shadow-blue-500/10'
                           : 'border-blue-500 bg-blue-500/10 text-blue-400 shadow-md shadow-blue-500/20'
                       }`}
                     >
@@ -80,7 +100,9 @@ export const UsersContent: React.FC = () => {
                     </div>
 
                     {/* Name in CAPSLOCK */}
-                    <span className="text-sm md:text-base font-extrabold tracking-wider text-white uppercase">
+                    <span className={`text-sm md:text-base font-extrabold tracking-wider uppercase ${
+                      isLight ? 'text-slate-900' : 'text-white'
+                    }`}>
                       {member.name}
                     </span>
                   </div>

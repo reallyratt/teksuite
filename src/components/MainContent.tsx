@@ -130,11 +130,11 @@ export const MainContent: React.FC<MainContentProps> = ({
             className="space-y-6"
           >
             {activeTab === 'home' ? (
-              <HomeContent />
+              <HomeContent theme={theme} />
             ) : activeTab === 'templates' ? (
-              <TemplatesContent enableCopy={enableCopy} />
+              <TemplatesContent enableCopy={enableCopy} theme={theme} />
             ) : activeTab === 'users' ? (
-              <UsersContent />
+              <UsersContent theme={theme} />
             ) : activeTab === 'settings' ? (
               <SettingsContent
                 theme={theme}
@@ -146,13 +146,19 @@ export const MainContent: React.FC<MainContentProps> = ({
               />
             ) : activeTab === 'developer' && !devUnlocked ? (
               <div className="mx-auto max-w-md my-8">
-                <div className="rounded-2xl border border-white/10 bg-[#161616] p-6 md:p-8 shadow-2xl relative overflow-hidden">
+                <div className={`rounded-2xl border p-6 md:p-8 shadow-2xl relative overflow-hidden ${
+                  theme === 'light'
+                    ? 'bg-white border-slate-200 text-slate-800 shadow-slate-200/50'
+                    : 'bg-[#161616] border-white/10 text-white'
+                }`}>
                   {/* Subtle Accent Glow */}
                   <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500" />
 
                   {/* RESTRICTED AREA Title above the username box */}
                   <div className="text-center mb-6">
-                    <h2 className="text-lg md:text-xl font-extrabold tracking-widest text-white uppercase">
+                    <h2 className={`text-lg md:text-xl font-extrabold tracking-widest uppercase ${
+                      theme === 'light' ? 'text-slate-900' : 'text-white'
+                    }`}>
                       RESTRICTED AREA
                     </h2>
                   </div>
@@ -160,7 +166,7 @@ export const MainContent: React.FC<MainContentProps> = ({
                   <form onSubmit={handleDevLogin} className="space-y-4">
                     {/* User Input Box with Icon inside */}
                     <div className="relative flex items-center">
-                      <div className="absolute left-3.5 pointer-events-none text-slate-500">
+                      <div className="absolute left-3.5 pointer-events-none text-slate-400">
                         <User className="h-4 w-4" />
                       </div>
                       <input
@@ -170,13 +176,17 @@ export const MainContent: React.FC<MainContentProps> = ({
                         onChange={(e) => setDevUsername(e.target.value)}
                         placeholder="Username"
                         required
-                        className="w-full rounded-xl border border-white/10 bg-[#121212] py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all font-mono"
+                        className={`w-full rounded-xl border py-2.5 pl-10 pr-4 text-sm font-mono transition-all focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 ${
+                          theme === 'light'
+                            ? 'bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400'
+                            : 'bg-[#121212] border-white/10 text-white placeholder-slate-500'
+                        }`}
                       />
                     </div>
 
                     {/* Password Input Box with Icon inside */}
                     <div className="relative flex items-center">
-                      <div className="absolute left-3.5 pointer-events-none text-slate-500">
+                      <div className="absolute left-3.5 pointer-events-none text-slate-400">
                         <Lock className="h-4 w-4" />
                       </div>
                       <input
@@ -186,7 +196,11 @@ export const MainContent: React.FC<MainContentProps> = ({
                         onChange={(e) => setDevPassword(e.target.value)}
                         placeholder="Password"
                         required
-                        className="w-full rounded-xl border border-white/10 bg-[#121212] py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all font-mono"
+                        className={`w-full rounded-xl border py-2.5 pl-10 pr-4 text-sm font-mono transition-all focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 ${
+                          theme === 'light'
+                            ? 'bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400'
+                            : 'bg-[#121212] border-white/10 text-white placeholder-slate-500'
+                        }`}
                       />
                     </div>
 
@@ -194,7 +208,7 @@ export const MainContent: React.FC<MainContentProps> = ({
                       <motion.div
                         initial={{ opacity: 0, y: -4 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="flex items-center space-x-2 rounded-lg bg-rose-500/10 border border-rose-500/20 p-2.5 text-xs text-rose-400"
+                        className="flex items-center space-x-2 rounded-lg bg-rose-500/10 border border-rose-500/20 p-2.5 text-xs text-rose-500"
                       >
                         <ShieldAlert className="h-4 w-4 shrink-0" />
                         <span>{authError}</span>
@@ -213,7 +227,7 @@ export const MainContent: React.FC<MainContentProps> = ({
                 </div>
               </div>
             ) : activeTab === 'developer' && devUnlocked ? (
-              <DevContent onLock={handleLockDeveloper} />
+              <DevContent onLock={handleLockDeveloper} theme={theme} />
             ) : (
               /* Default Page Content */
               <>
@@ -304,10 +318,10 @@ export const MainContent: React.FC<MainContentProps> = ({
 
         {/* Bottom Middle Footer */}
         <footer className="pt-10 pb-6 text-center space-y-1">
-          <p className="text-xs md:text-sm font-semibold text-slate-400">
+          <p className={`text-xs md:text-sm font-semibold ${theme === 'light' ? 'text-slate-600' : 'text-slate-400'}`}>
             Authored by Cay
           </p>
-          <p className="text-[11px] font-extrabold text-indigo-400 tracking-widest uppercase">
+          <p className={`text-[11px] font-extrabold tracking-widest uppercase ${theme === 'light' ? 'text-indigo-600' : 'text-indigo-400'}`}>
             v1.6 stable
           </p>
         </footer>

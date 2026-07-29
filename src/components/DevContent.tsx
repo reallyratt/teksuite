@@ -10,6 +10,7 @@ import {
 
 interface DevContentProps {
   onLock: () => void;
+  theme?: 'dark' | 'light';
 }
 
 type DevTabId = 'otmt' | 'atf' | 'tksr';
@@ -26,7 +27,8 @@ const extractTagContent = (rawText: string, startTag: string, endTag: string): s
   return rawText.substring(contentStart, endIndex).trim();
 };
 
-export const DevContent: React.FC<DevContentProps> = ({ onLock }) => {
+export const DevContent: React.FC<DevContentProps> = ({ onLock, theme = 'dark' }) => {
+  const isLight = theme === 'light';
   // Google Doc fetched notes
   const [mlstnsText, setMlstnsText] = useState<string>('');
   const [otmtText, setOtmtText] = useState<string>('');
@@ -144,7 +146,9 @@ export const DevContent: React.FC<DevContentProps> = ({ onLock }) => {
             return (
               <p
                 key={index}
-                className="text-sm font-extrabold text-indigo-400 uppercase tracking-wider pt-2 first:pt-0"
+                className={`text-sm font-extrabold uppercase tracking-wider pt-2 first:pt-0 ${
+                  isLight ? 'text-indigo-600' : 'text-indigo-400'
+                }`}
               >
                 {trimmed}
               </p>
@@ -154,8 +158,8 @@ export const DevContent: React.FC<DevContentProps> = ({ onLock }) => {
           const content = isBullet ? trimmed.substring(1).trim() : trimmed;
 
           return (
-            <div key={index} className="flex items-start space-x-2.5 text-slate-200">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-indigo-400 mt-2 shrink-0" />
+            <div key={index} className={`flex items-start space-x-2.5 ${isLight ? 'text-slate-800' : 'text-slate-200'}`}>
+              <span className={`inline-block h-1.5 w-1.5 rounded-full mt-2 shrink-0 ${isLight ? 'bg-indigo-600' : 'bg-indigo-400'}`} />
               <span className="text-sm font-medium leading-relaxed">{content}</span>
             </div>
           );
@@ -201,42 +205,62 @@ export const DevContent: React.FC<DevContentProps> = ({ onLock }) => {
       <div className="flex items-center justify-end">
         <button
           onClick={onLock}
-          className="flex items-center space-x-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-300 hover:bg-white/10 hover:text-white transition-all active:scale-95"
+          className={`flex items-center space-x-1.5 rounded-lg border px-3 py-1.5 text-xs transition-all active:scale-95 ${
+            isLight
+              ? 'border-slate-300 bg-white text-slate-700 hover:bg-slate-100 hover:text-slate-900 shadow-2xs'
+              : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white'
+          }`}
         >
-          <LogOut className="h-3.5 w-3.5 text-indigo-400" />
+          <LogOut className={`h-3.5 w-3.5 ${isLight ? 'text-indigo-600' : 'text-indigo-400'}`} />
           <span>Logout</span>
         </button>
       </div>
 
       {/* 1. ACROSS SQUARE: MILESTONES (like NYAOSI PIRSA) */}
-      <div className="rounded-2xl border border-white/10 bg-[#161616] p-6 md:p-8 shadow-2xl space-y-4 relative overflow-hidden">
+      <div className={`rounded-2xl border p-6 md:p-8 shadow-2xl space-y-4 relative overflow-hidden ${
+        isLight
+          ? 'bg-white border-slate-200 text-slate-800 shadow-slate-200/50'
+          : 'bg-[#161616] border-white/10 text-white'
+      }`}>
         {/* Left Aligned Header */}
-        <div className="border-b border-white/10 pb-3 text-left flex items-center justify-between">
+        <div className={`border-b pb-3 text-left flex items-center justify-between ${isLight ? 'border-slate-200' : 'border-white/10'}`}>
           <div className="flex items-center space-x-2.5">
-            <ListChecks className="h-5 w-5 text-indigo-400" />
-            <h3 className="text-lg md:text-xl font-bold text-white tracking-wide uppercase">
+            <ListChecks className={`h-5 w-5 ${isLight ? 'text-indigo-600' : 'text-indigo-400'}`} />
+            <h3 className={`text-lg md:text-xl font-bold tracking-wide uppercase ${isLight ? 'text-slate-900' : 'text-white'}`}>
               MILESTONES
             </h3>
           </div>
         </div>
 
         {/* Content Body Box */}
-        <div className="rounded-xl bg-[#121212] border border-white/5 p-5 md:p-6 text-slate-200 text-sm md:text-base leading-relaxed font-sans">
+        <div className={`rounded-xl border p-5 md:p-6 text-sm md:text-base leading-relaxed font-sans ${
+          isLight
+            ? 'bg-slate-50 border-slate-200 text-slate-800'
+            : 'bg-[#121212] border-white/5 text-slate-200'
+        }`}>
           {renderFormattedNotes(mlstnsText, defaultMlstns)}
         </div>
       </div>
 
       {/* 2. MIDDLE DIVIDER SQUARE (like TOOLS divider, without text) */}
       <div className="flex justify-center pt-1 pb-1">
-        <div className="h-2.5 w-20 rounded-full bg-[#161616] border border-white/15 shadow-lg shadow-black/40 ring-1 ring-white/5" />
+        <div className={`h-2.5 w-20 rounded-full border shadow-lg ring-1 ${
+          isLight
+            ? 'bg-white border-slate-200 shadow-slate-200 ring-black/5'
+            : 'bg-[#161616] border-white/15 shadow-black/40 ring-white/5'
+        }`} />
       </div>
 
       {/* 3. SPLIT SECTION: Left Tabs + Right Calendar (Side by Side Horizontally) */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
         {/* LEFT COLUMN: MULTI-TAB BOX (OTOMATEKS, ARTEKSFAK, TEKSER) */}
-        <div className="rounded-2xl border border-white/10 bg-[#161616] p-6 shadow-2xl space-y-5 relative overflow-hidden">
+        <div className={`rounded-2xl border p-6 shadow-2xl space-y-5 relative overflow-hidden ${
+          isLight
+            ? 'bg-white border-slate-200 text-slate-800 shadow-slate-200/50'
+            : 'bg-[#161616] border-white/10 text-white'
+        }`}>
           {/* Tab Selector Row with Smooth Square Highlight / Slider */}
-          <div className="border-b border-white/10 pb-3">
+          <div className={`border-b pb-3 ${isLight ? 'border-slate-200' : 'border-white/10'}`}>
             <div className="flex items-center space-x-2 overflow-x-auto pb-1 scrollbar-none">
               {tabsConfig.map((tab) => {
                 const isActive = activeTab === tab.id;
@@ -245,7 +269,11 @@ export const DevContent: React.FC<DevContentProps> = ({ onLock }) => {
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
                     className={`relative px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200 shrink-0 ${
-                      isActive ? 'text-white' : 'text-slate-400 hover:text-slate-200'
+                      isActive
+                        ? 'text-white'
+                        : isLight
+                        ? 'text-slate-500 hover:text-slate-900'
+                        : 'text-slate-400 hover:text-slate-200'
                     }`}
                   >
                     {isActive && (
@@ -263,7 +291,11 @@ export const DevContent: React.FC<DevContentProps> = ({ onLock }) => {
           </div>
 
           {/* Active Tab Notes Content Box */}
-          <div className="rounded-xl bg-[#121212] border border-white/5 p-5 text-slate-200 text-sm leading-relaxed min-h-[180px]">
+          <div className={`rounded-xl border p-5 text-sm leading-relaxed min-h-[180px] ${
+            isLight
+              ? 'bg-slate-50 border-slate-200 text-slate-800'
+              : 'bg-[#121212] border-white/5 text-slate-200'
+          }`}>
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeTab}
@@ -279,13 +311,21 @@ export const DevContent: React.FC<DevContentProps> = ({ onLock }) => {
         </div>
 
         {/* RIGHT COLUMN: CALENDAR WIDGET */}
-        <div className="rounded-2xl border border-white/10 bg-[#161616] p-6 shadow-2xl space-y-4 relative overflow-hidden">
+        <div className={`rounded-2xl border p-6 shadow-2xl space-y-4 relative overflow-hidden ${
+          isLight
+            ? 'bg-white border-slate-200 text-slate-800 shadow-slate-200/50'
+            : 'bg-[#161616] border-white/10 text-white'
+        }`}>
           {/* Calendar Header: < Month, Year > */}
-          <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <div className={`flex items-center justify-between border-b pb-3 ${isLight ? 'border-slate-200' : 'border-white/10'}`}>
             <button
               onClick={handlePrevMonth}
               title="Previous Month"
-              className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white transition-all active:scale-95 border border-white/5"
+              className={`p-1.5 rounded-lg transition-all active:scale-95 border ${
+                isLight
+                  ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border-slate-200'
+                  : 'bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border-white/5'
+              }`}
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -295,8 +335,10 @@ export const DevContent: React.FC<DevContentProps> = ({ onLock }) => {
               title="Click to reset to current month"
               className="flex items-center space-x-2 group"
             >
-              <CalendarIcon className="h-4 w-4 text-indigo-400 group-hover:scale-110 transition-transform" />
-              <span className="text-sm font-extrabold text-white tracking-wide uppercase group-hover:text-indigo-300 transition-colors">
+              <CalendarIcon className={`h-4 w-4 group-hover:scale-110 transition-transform ${isLight ? 'text-indigo-600' : 'text-indigo-400'}`} />
+              <span className={`text-sm font-extrabold tracking-wide uppercase transition-colors ${
+                isLight ? 'text-slate-900 group-hover:text-indigo-600' : 'text-white group-hover:text-indigo-300'
+              }`}>
                 {monthName} {calYear}
               </span>
             </button>
@@ -304,7 +346,11 @@ export const DevContent: React.FC<DevContentProps> = ({ onLock }) => {
             <button
               onClick={handleNextMonth}
               title="Next Month"
-              className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white transition-all active:scale-95 border border-white/5"
+              className={`p-1.5 rounded-lg transition-all active:scale-95 border ${
+                isLight
+                  ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border-slate-200'
+                  : 'bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border-white/5'
+              }`}
             >
               <ChevronRight className="h-4 w-4" />
             </button>
@@ -313,7 +359,9 @@ export const DevContent: React.FC<DevContentProps> = ({ onLock }) => {
           {/* Calendar Grid */}
           <div className="space-y-2">
             {/* Days of Week Header */}
-            <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-indigo-400 uppercase tracking-wider">
+            <div className={`grid grid-cols-7 gap-1 text-center text-[11px] font-bold uppercase tracking-wider ${
+              isLight ? 'text-indigo-600' : 'text-indigo-400'
+            }`}>
               <span>Su</span>
               <span>Mo</span>
               <span>Tu</span>
@@ -331,7 +379,7 @@ export const DevContent: React.FC<DevContentProps> = ({ onLock }) => {
                 return (
                   <div
                     key={`prev-${i}`}
-                    className="p-2 text-slate-600 font-normal select-none"
+                    className={`p-2 font-normal select-none ${isLight ? 'text-slate-300' : 'text-slate-600'}`}
                   >
                     {dayNum}
                   </div>
@@ -352,6 +400,8 @@ export const DevContent: React.FC<DevContentProps> = ({ onLock }) => {
                     className={`p-2 rounded-lg transition-all select-none ${
                       isToday
                         ? 'bg-indigo-600 text-white font-black shadow-md shadow-indigo-600/40 ring-1 ring-indigo-400'
+                        : isLight
+                        ? 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
                         : 'text-slate-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
@@ -366,7 +416,7 @@ export const DevContent: React.FC<DevContentProps> = ({ onLock }) => {
               }).map((_, i) => (
                 <div
                   key={`next-${i}`}
-                  className="p-2 text-slate-600 font-normal select-none"
+                  className={`p-2 font-normal select-none ${isLight ? 'text-slate-300' : 'text-slate-600'}`}
                 >
                   {i + 1}
                 </div>
