@@ -1,19 +1,24 @@
 {
+  "id": "/",
   "short_name": "TEKSUITE",
   "name": "TEKSUITE Productivity Dashboard",
   "description": "TEKSUITE client dashboard and workspace suite",
-  "icons": [
-    {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' fill='%234f46e5'><rect width='512' height='512' rx='128' fill='%234f46e5'/><path d='M160 192h192v200H160z' fill='white' opacity='0.2'/><path d='M192 160h128v32H192z' fill='white'/><rect x='140' y='192' width='232' height='180' rx='24' fill='white'/><path d='M216 260h80M216 300h50' stroke='%234f46e5' stroke-width='24' stroke-linecap='round'/></svg>",
-      "sizes": "192x192 512x512",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
-  ],
+  "lang": "en",
+  "dir": "ltr",
   "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "portrait",
   "background_color": "#0a0a0a",
   "theme_color": "#4f46e5",
-  "display": "standalone",
-  "orientation": "portrait",
-  "categories": ["productivity", "utilities"]
+  "categories": ["productivity", "utilities"],
+  "scope_extensions": [
+    {
+      "origin": "*.teksuite.app"
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "iarc_rating_id": ""
 }
