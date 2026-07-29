@@ -1,10 +1,14 @@
-// This is the "Offline page" service worker with Background Sync, Periodic Sync, and Push Notifications
-
-importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
+// Service Worker for TekSuite (PWABuilder Compliant)
 
 const CACHE = "pwabuilder-page";
+const offlineFallbackPage = "/offline.html";
 
-const offlineFallbackPage = "offline.html";
+// Safe workbox import with fallback so it never crashes if CDN is unreachable or blocked
+try {
+  importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
+} catch (e) {
+  console.warn('[Service Worker] Workbox CDN load skipped, using native fallback');
+}
 
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {
@@ -12,15 +16,35 @@ self.addEventListener("message", (event) => {
   }
 });
 
-self.addEventListener('install', async (event) => {
+self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE)
       .then((cache) => cache.add(offlineFallbackPage))
+      .then(() => self.skipWaiting())
   );
 });
 
-if (workbox.navigationPreload.isSupported()) {
-  workbox.navigationPreload.enable();
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    (async () => {
+      if ('navigationPreload' in self.registration) {
+        try {
+          await self.registration.navigationPreload.enable();
+        } catch (err) {
+          console.warn('[Service Worker] Navigation preload enable failed:', err);
+        }
+      }
+      await self.clients.claim();
+    })()
+  );
+});
+
+if (typeof workbox !== 'undefined' && workbox && workbox.navigationPreload && workbox.navigationPreload.isSupported()) {
+  try {
+    workbox.navigationPreload.enable();
+  } catch (e) {
+    console.warn('[Service Worker] Workbox navigationPreload error:', e);
+  }
 }
 
 self.addEventListener('fetch', (event) => {
@@ -28,7 +52,6 @@ self.addEventListener('fetch', (event) => {
     event.respondWith((async () => {
       try {
         const preloadResp = await event.preloadResponse;
-
         if (preloadResp) {
           return preloadResp;
         }
@@ -36,10 +59,9 @@ self.addEventListener('fetch', (event) => {
         const networkResp = await fetch(event.request);
         return networkResp;
       } catch (error) {
-
         const cache = await caches.open(CACHE);
         const cachedResp = await cache.match(offlineFallbackPage);
-        return cachedResp;
+        return cachedResp || new Response("Offline", { status: 503, headers: { "Content-Type": "text/html" } });
       }
     })());
   }
@@ -57,7 +79,6 @@ self.addEventListener('sync', (event) => {
 
 async function syncData() {
   console.log('[Service Worker] Syncing pending offline requests/data...');
-  // Custom data synchronization / offline queue processing logic
   return Promise.resolve();
 }
 
@@ -73,7 +94,6 @@ self.addEventListener('periodicsync', (event) => {
 
 async function updatePeriodicContent() {
   console.log('[Service Worker] Fetching background periodic updates...');
-  // Custom background update logic
   return Promise.resolve();
 }
 

@@ -8,6 +8,13 @@
     <meta name="theme-color" content="#4f46e5" />
     <meta name="description" content="TEKSUITE Productivity Dashboard" />
     <title>TekSuite</title>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js', { scope: '/' });
+        });
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

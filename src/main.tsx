@@ -11,15 +11,21 @@ createRoot(document.getElementById('root')!).render(
 
 // Register Service Worker for PWA / offline support
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').then(
+  const registerSW = () => {
+    navigator.serviceWorker.register('/sw.js', { scope: '/' }).then(
       (registration) => {
-        console.log('TEKSUITE ServiceWorker registered with scope:', registration.scope);
+        console.log('TekSuite ServiceWorker registered with scope:', registration.scope);
       },
       (err) => {
-        console.error('TEKSUITE ServiceWorker registration failed:', err);
+        console.error('TekSuite ServiceWorker registration failed:', err);
       }
     );
-  });
+  };
+
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    registerSW();
+  } else {
+    window.addEventListener('load', registerSW);
+  }
 }
 

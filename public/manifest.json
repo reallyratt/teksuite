@@ -13,6 +13,12 @@
   "background_color": "#0a0a0a",
   "theme_color": "#4f46e5",
   "categories": ["productivity", "utilities"],
+  "serviceworker": {
+    "src": "/sw.js",
+    "scope": "/",
+    "type": "classic",
+    "update_via_cache": "none"
+  },
   "scope_extensions": [
     {
       "origin": "*.teksuite.app"
