@@ -1,5 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useLayoutEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+
+const ScrollResetOnMount: React.FC<{ mainRef: React.RefObject<HTMLElement | null> }> = ({ mainRef }) => {
+  useLayoutEffect(() => {
+    if (mainRef.current) {
+      mainRef.current.scrollTop = 0;
+    }
+    window.scrollTo(0, 0);
+  }, [mainRef]);
+
+  return null;
+};
 import { TabId } from '../types';
 import { HomeContent } from './HomeContent';
 import { TemplatesContent } from './TemplatesContent';
@@ -89,6 +100,8 @@ export const MainContent: React.FC<MainContentProps> = ({
   const current = tabInfo[activeTab];
   const IconComponent = current.icon;
 
+  const mainRef = useRef<HTMLElement>(null);
+
   // State for Developer Page password protection
   const [devUsername, setDevUsername] = useState('');
   const [devPassword, setDevPassword] = useState('');
@@ -111,6 +124,7 @@ export const MainContent: React.FC<MainContentProps> = ({
 
   return (
     <main
+      ref={mainRef}
       id="main-content-view"
       className={`flex-1 p-6 md:p-10 overflow-y-auto min-h-0 relative transition-colors duration-300 overscroll-y-none ${
         theme === 'light' ? 'bg-slate-100 text-slate-800' : 'bg-[#0a0a0a] text-slate-200'
@@ -129,6 +143,7 @@ export const MainContent: React.FC<MainContentProps> = ({
             transition={{ duration: 0.25, ease: 'easeOut' }}
             className="space-y-6"
           >
+            <ScrollResetOnMount mainRef={mainRef} />
             {activeTab === 'home' ? (
               <HomeContent theme={theme} />
             ) : activeTab === 'templates' ? (
@@ -322,7 +337,7 @@ export const MainContent: React.FC<MainContentProps> = ({
             Authored by Cay
           </p>
           <p className={`text-[11px] font-extrabold tracking-widest uppercase ${theme === 'light' ? 'text-indigo-600' : 'text-indigo-400'}`}>
-            v1.6 stable
+            v1.9 stable
           </p>
         </footer>
       </div>

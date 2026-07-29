@@ -6,6 +6,7 @@ import {
   FilePenLine,
   Sparkles,
   FolderOpen,
+  Scissors,
 } from 'lucide-react';
 import { TypewriterIcon } from './TypewriterIcon';
 
@@ -26,6 +27,7 @@ export const HomeContent: React.FC<HomeContentProps> = ({ theme = 'dark' }) => {
   const isLight = theme === 'light';
   const [time, setTime] = useState(new Date());
   const [comingSoonToast, setComingSoonToast] = useState(false);
+  const [toastTitle, setToastTitle] = useState('ARTEKSFAK');
   const [namaMinggu, setNamaMinggu] = useState<string>('MINGGU BIASA XVII');
   const [nyaosiText, setNyaosiText] = useState<string>('');
 
@@ -80,6 +82,15 @@ export const HomeContent: React.FC<HomeContentProps> = ({ theme = 'dark' }) => {
   }, []);
 
   const handleArteksfakClick = () => {
+    setToastTitle('ARTEKSFAK');
+    setComingSoonToast(true);
+    setTimeout(() => {
+      setComingSoonToast(false);
+    }, 3000);
+  };
+
+  const handleTekserClick = () => {
+    setToastTitle('TEKSER');
     setComingSoonToast(true);
     setTimeout(() => {
       setComingSoonToast(false);
@@ -209,7 +220,7 @@ export const HomeContent: React.FC<HomeContentProps> = ({ theme = 'dark' }) => {
               <Sparkles className="h-4 w-4" />
             </div>
             <div>
-              <p className={`text-sm font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>ARTEKSFAK</p>
+              <p className={`text-sm font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>{toastTitle}</p>
               <p className={`text-xs font-medium ${isLight ? 'text-indigo-600' : 'text-indigo-300'}`}>
                 Coming Soon! Feature under development.
               </p>
@@ -335,8 +346,8 @@ export const HomeContent: React.FC<HomeContentProps> = ({ theme = 'dark' }) => {
         </div>
       </div>
 
-      {/* 2 Square Tools Below */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* 3 Square Tools Below */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Tool 1: OTOMATEKS */}
         <a
           href="https://otomateks.netlify.app/"
@@ -409,6 +420,45 @@ export const HomeContent: React.FC<HomeContentProps> = ({ theme = 'dark' }) => {
             <p className={`text-xs leading-relaxed ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>
               Make &apos;Panduan File&apos; within seconds using premade
               database.
+            </p>
+          </div>
+        </button>
+
+        {/* Tool 3: TEKSER */}
+        <button
+          onClick={handleTekserClick}
+          className={`group text-left w-full rounded-2xl border p-6 shadow-xl transition-all active:scale-98 relative overflow-hidden ${
+            isLight
+              ? 'bg-white border-slate-200 hover:border-indigo-300 hover:bg-indigo-50/30 shadow-slate-200/50'
+              : 'bg-[#161616] border-white/10 hover:border-indigo-500/50 hover:bg-[#1a1a1a] hover:shadow-indigo-500/10'
+          }`}
+        >
+          <div className="flex items-start justify-between">
+            {/* Scissors Icon */}
+            <div className={`flex h-12 w-12 items-center justify-center rounded-xl border group-hover:bg-indigo-600 group-hover:text-white transition-all ${
+              isLight
+                ? 'bg-indigo-50 border-indigo-200 text-indigo-600'
+                : 'bg-indigo-600/15 border-indigo-500/30 text-indigo-400'
+            }`}>
+              <Scissors className="h-6 w-6" />
+            </div>
+            <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-md ${
+              isLight
+                ? 'text-amber-700 bg-amber-100 border border-amber-300'
+                : 'text-amber-400/80 bg-amber-400/10 border border-amber-400/20'
+            }`}>
+              Coming Soon
+            </span>
+          </div>
+
+          <div className="mt-5 space-y-2">
+            <h4 className={`text-lg font-extrabold tracking-wider transition-colors ${
+              isLight ? 'text-slate-900 group-hover:text-indigo-600' : 'text-white group-hover:text-indigo-300'
+            }`}>
+              TEKSER
+            </h4>
+            <p className={`text-xs leading-relaxed ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>
+              Quick Quality Control and essential PowerPoint modification.
             </p>
           </div>
         </button>
