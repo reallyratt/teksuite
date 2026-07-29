@@ -1,8 +1,8 @@
 {
   "id": "/",
-  "short_name": "TEKSUITE",
-  "name": "TEKSUITE Productivity Dashboard",
-  "description": "TEKSUITE client dashboard and workspace suite",
+  "short_name": "TekSuite",
+  "name": "TekSuite",
+  "description": "TekSuite, personal dashboard for Divisi Teks Misa",
   "lang": "en",
   "dir": "ltr",
   "start_url": "/",
